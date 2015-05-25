@@ -10,6 +10,8 @@ class AllowsQueryParamsTest < MiniTest::Test
     result = Product.query_by_params('')
 
     assert_equal(50, result.data.count)
+    assert_equal(500, result.total_count)
+    assert_equal(10, result.total_pages)
   end
 
   def test_sort_by_name_asc
@@ -36,6 +38,8 @@ class AllowsQueryParamsTest < MiniTest::Test
     category = Category.first
 
     result = category.products.query_by_params('sortBy=price desc')
+
+    assert_equal(category.id, result.data.first.category_id)
   end
 
 end

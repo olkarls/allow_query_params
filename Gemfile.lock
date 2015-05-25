@@ -19,6 +19,8 @@ GEM
     awesome_print (1.6.1)
     builder (3.2.2)
     docile (1.1.5)
+    faker (1.4.3)
+      i18n (~> 0.5)
     i18n (0.7.0)
     json (1.8.2)
     minitest (5.6.1)
@@ -45,6 +47,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   awesome_print
+  faker
   minitest-reporters
   rake
   simplecov
