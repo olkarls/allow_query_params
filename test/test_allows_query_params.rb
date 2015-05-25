@@ -7,35 +7,35 @@ class AllowsQueryParamsTest < MiniTest::Test
   insert_test_data
 
   def test_defaults
-    products = Product.query_by_params('')
+    result = Product.query_by_params('')
 
-    assert_equal(50, products.count)
+    assert_equal(50, result.data.count)
   end
 
   def test_sort_by_name_asc
-    products = Product.query_by_params('sortBy=name')
+    result = Product.query_by_params('sortBy=name')
 
-    assert_equal('a', products.first.name[0])
+    assert_equal('a', result.data.first.name[0])
   end
 
   def test_sort_by_name_desc
-    products = Product.query_by_params('sortBy=name desc')
+    result = Product.query_by_params('sortBy=name desc')
 
-    assert_equal('w', products.first.name[0])
+    assert_equal('w', result.data.first.name[0])
   end
 
   def test_sort_by_price_desc_and_name_desc
-    products = Product.query_by_params('sortBy=price desc,name desc')
+    result = Product.query_by_params('sortBy=price desc,name desc')
 
     max_price = Product.maximum('price')
 
-    assert_equal(max_price, products.first.price)
+    assert_equal(max_price, result.data.first.price)
   end
 
   def test_chain_from_association
     category = Category.first
 
-    products = category.products.query_by_params('sortBy=price desc')
+    result = category.products.query_by_params('sortBy=price desc')
   end
 
 end
