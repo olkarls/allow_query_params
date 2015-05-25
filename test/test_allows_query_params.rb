@@ -42,4 +42,10 @@ class AllowsQueryParamsTest < MiniTest::Test
     assert_equal(category.id, result.data.first.category_id)
   end
 
+  def test_modified_since
+    result = Product.query_by_params('modifiedSince=2015-12-01 00:00:00')
+
+    assert_equal(8, result.total_count)
+  end
+
 end

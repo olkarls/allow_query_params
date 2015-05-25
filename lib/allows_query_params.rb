@@ -34,6 +34,12 @@ module AllowsQueryParam
         end
       end
 
+      unless query_params.modified_since.blank?
+        if self.column_names.include?('updated_at')
+          query = query.where('updated_at > ?', query_params.modified_since)
+        end
+      end
+
       total_count = query.count
       total_pages = (total_count / query_params.page_size).ceil
 
@@ -41,7 +47,7 @@ module AllowsQueryParam
         .limit(query_params.page_size)
         .offset(query_params.page_size * (query_params.page - 1))
 
-      QueryResult.new(data, total_pages, total_count)
+      QueryResult.new(data.to_a, total_pages, total_count)
 
     end
   end
