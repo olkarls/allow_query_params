@@ -47,5 +47,4 @@ class AllowsQueryParamsTest < MiniTest::Test
 
     assert_equal(8, result.total_count)
   end
-
 end

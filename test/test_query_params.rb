@@ -58,6 +58,13 @@ class QueryParamsTest < MiniTest::Test
     assert_equal(50, query_params.page_size)
   end
 
+  def test_page_size_with_too_large_number
+    query_string = "pageSize=1000"
+    query_params = QueryParams.new(query_string)
+
+    assert_equal(100, query_params.page_size)
+  end
+
   def test_modified_since_with_valid_time
     query_string = "modifiedSince=2010-10-10%2000:00:00"
     query_params = QueryParams.new(query_string)
@@ -70,5 +77,57 @@ class QueryParamsTest < MiniTest::Test
     query_params = QueryParams.new(query_string)
 
     assert_equal(nil, query_params.modified_since)
+  end
+
+=begin
+  Eq	Equal	/Suppliers?$filter=Address/City eq 'Redmond'
+  Ne	Not equal	/Suppliers?$filter=Address/City ne 'London'
+  Gt	Greater than	/Products?$filter=Price gt 20
+  Ge	Greater than or equal	/Products?$filter=Price ge 10
+  Lt	Less than	/Products?$filter=Price lt 20
+  Le	Less than or equal	/Products?$filter=Price le 100
+  And	Logical and	/Products?$filter=Price le 200 and Price gt 3.5
+  Or	Logical or	/Products?$filter=Price le 3.5 or Price gt 200
+  Not	Logical negation	/Products?$filter=not endswith(Description,'milk')
+=end
+
+  def test_filter_eq_with_int
+    query_string = "filter=price eq 26"
+    query_params = QueryParams.new(query_string)
+
+    assert_equal([{ property: :price, operator: :eq, value: 26}], query_params.filters)
+  end
+
+  def test_filter_eq_with_bool
+    query_string = "filter=active eq false"
+    query_params = QueryParams.new(query_string)
+
+    assert_equal([{ property: :active, operator: :eq, value: false}], query_params.filters)
+  end
+
+  def test_filter_eq_with_float
+    query_string = "filter=price eq 100.0"
+    query_params = QueryParams.new(query_string)
+
+    assert_equal([{ property: :price, operator: :eq, value: 100.0}], query_params.filters)
+  end
+
+  def test_filter_eq_with_date
+    query_string = "filter=published eq 2010-10-10 00:00:00"
+    query_params = QueryParams.new(query_string)
+
+    assert_equal(Time, query_params.filters.first[:value].class)
+  end
+
+  def test_multiple_filters
+    query_string = "filter=price lt 100, name eq headphones"
+    query_params = QueryParams.new(query_string)
+
+    expected = [
+      { property: :price, operator: :lt, value: 100 },
+      { property: :name, operator: :eq, value: 'headphones' }
+    ]
+
+    assert_equal(expected, query_params.filters)
   end
 end
