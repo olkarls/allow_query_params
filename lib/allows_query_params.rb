@@ -1,31 +1,27 @@
+require 'helpers/configuration'
+
 module AllowsQueryParam
-  attr_accessor :underscore_keys, :mappings
+  extend Configuration
+
+  define_setting :page_size, 50
+  define_setting :maximum_page_size, 100
 
   def allows_query_params(options = {})
-    for key, value in options
-      send(:"#{key}=", value)
-    end
+    config = class_variable_set "@@allows_query_param_config", {}
 
-    yield self if block_given?
-
-    if options.has_key?(:underscore_keys)
-      @underscore_keys = options[:underscore_keys]
-    else
-      @underscore_keys = false
-    end
-
-    if options.has_key?(:mappings)
-      @mappings = options[:mappings]
-    else
-      @mappings = false
-    end
+    config[:page_size] = set_option(options, :page_size)
+    config[:maximum_page_size] = set_option(options, :maximum_page_size)
+    # config[:mappings] = set_option(options, :mappings)
 
     extend ClassMethods
   end
 
   module ClassMethods
     def query_by_params(query_string)
-      query_params = QueryParams.new(query_string)
+
+      config = class_variable_get "@@allows_query_param_config"
+
+      query_params = QueryParams.new(query_string, config)
       query = self
 
       query_params.order_by.each do |order|
@@ -51,6 +47,13 @@ module AllowsQueryParam
 
     end
   end
+
+  private
+
+  def set_option(options, key)
+    options.has_key?(key) ? options[key] : AllowsQueryParam.send(key)
+  end
+
 end
 
 require 'allows_query_params/query_params'

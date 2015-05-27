@@ -3,25 +3,12 @@ require "awesome_print"
 class QueryParams
   attr_accessor :order_by, :page, :page_size, :maximum_page_size, :modified_since, :filters
 
-  DEFAULT_PAGE_SIZE = 50
-  DEFAULT_MAXIMUM_PAGE_SIZE = 100
-
   def initialize(query_string, options = {})
     self.page = 1
     self.order_by = []
     self.filters = []
-
-    if options.has_key?(:page_size)
-      self.page_size = options[:page_size]
-    else
-      self.page_size = DEFAULT_PAGE_SIZE
-    end
-
-    if options.has_key?(:maximum_page_size)
-      self.maximum_page_size = options[:maximum_page_size]
-    else
-      self.maximum_page_size = DEFAULT_MAXIMUM_PAGE_SIZE
-    end
+    self.page_size = options[:page_size]
+    self.maximum_page_size = options[:maximum_page_size]
 
     params = CGI::parse(query_string)
 

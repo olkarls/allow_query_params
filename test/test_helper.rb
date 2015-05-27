@@ -16,8 +16,20 @@ class Category < ActiveRecord::Base
 end
 
 class Product < ActiveRecord::Base
-  allows_query_params
+  allows_query_params do |config|
+    config.maximum_page_size = 50
+    config.default_page_size = 10
+    config.underscore_keys = true
+  end
+
   belongs_to :category
+end
+
+class Customer < ActiveRecord::Base
+  allows_query_params do |config|
+    config.maximum_page_size = 50
+    config.default_page_size = 10
+  end
 end
 
 def load_schema

@@ -86,9 +86,6 @@ class QueryParamsTest < MiniTest::Test
   Ge	Greater than or equal	/Products?$filter=Price ge 10
   Lt	Less than	/Products?$filter=Price lt 20
   Le	Less than or equal	/Products?$filter=Price le 100
-  And	Logical and	/Products?$filter=Price le 200 and Price gt 3.5
-  Or	Logical or	/Products?$filter=Price le 3.5 or Price gt 200
-  Not	Logical negation	/Products?$filter=not endswith(Description,'milk')
 =end
 
   def test_filter_eq_with_int
