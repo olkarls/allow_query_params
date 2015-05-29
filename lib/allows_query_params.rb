@@ -11,7 +11,7 @@ module AllowsQueryParam
 
     config[:page_size] = set_option(options, :page_size)
     config[:maximum_page_size] = set_option(options, :maximum_page_size)
-    # config[:mappings] = set_option(options, :mappings)
+    config[:mappings] = options.has_key?(:mapping) ? options[:mapping] : nil
 
     extend ClassMethods
   end
