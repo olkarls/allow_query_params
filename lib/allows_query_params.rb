@@ -18,7 +18,6 @@ module AllowsQueryParam
 
   module ClassMethods
     def query_by_params(query_string)
-
       config = class_variable_get "@@allows_query_param_config"
 
       query_params = QueryParams.new(query_string, config)

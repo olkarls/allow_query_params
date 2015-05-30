@@ -3,7 +3,7 @@ require "awesome_print"
 class QueryParams
   attr_accessor :order_by, :page, :page_size, :maximum_page_size, :modified_since, :filters
 
-  def initialize(query_string, options = {})
+  def initialize(query_string, options = { :page_size => 50, :maximum_page_size => 100 })
     self.page = 1
     self.order_by = []
     self.filters = []
