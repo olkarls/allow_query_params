@@ -29,9 +29,9 @@ module AllowsQueryParam
         end
       end
 
-      unless query_params.modified_since.blank?
-        if self.column_names.include?('updated_at')
-          query = query.where('updated_at > ?', query_params.modified_since)
+      query_params.filters.each do |filter|
+        if self.column_names.include?(filter[:property].to_s)
+          query = query.where("#{filter[:property]} #{convert_operator(filter[:operator])} '#{filter[:value]}'")
         end
       end
 
@@ -53,6 +53,22 @@ module AllowsQueryParam
     options.has_key?(key) ? options[key] : AllowsQueryParam.send(key)
   end
 
+  def convert_operator(operator)
+    case operator
+    when :eq
+      '=='
+    when :ne
+      '!='
+    when :gt
+      '>'
+    when :ge
+      '>='
+    when :lt
+      '<'
+    when :le
+      '<='
+    end
+  end
 end
 
 require 'allows_query_params/query_params'

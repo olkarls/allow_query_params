@@ -65,29 +65,6 @@ class QueryParamsTest < MiniTest::Test
     assert_equal(100, query_params.page_size)
   end
 
-  def test_modified_since_with_valid_time
-    query_string = "modifiedSince=2010-10-10%2000:00:00"
-    query_params = QueryParams.new(query_string)
-
-    assert_equal(DateTime.new(2010, 10, 10, 0, 0, 0), query_params.modified_since)
-  end
-
-  def test_modified_since_with_invalid_time
-    query_string = "modifiedSince=dddd-sa-as"
-    query_params = QueryParams.new(query_string)
-
-    assert_equal(nil, query_params.modified_since)
-  end
-
-=begin
-  Eq	Equal	/Suppliers?$filter=Address/City eq 'Redmond'
-  Ne	Not equal	/Suppliers?$filter=Address/City ne 'London'
-  Gt	Greater than	/Products?$filter=Price gt 20
-  Ge	Greater than or equal	/Products?$filter=Price ge 10
-  Lt	Less than	/Products?$filter=Price lt 20
-  Le	Less than or equal	/Products?$filter=Price le 100
-=end
-
   def test_filter_eq_with_int
     query_string = "filter=price eq 26"
     query_params = QueryParams.new(query_string)
@@ -110,10 +87,15 @@ class QueryParamsTest < MiniTest::Test
   end
 
   def test_filter_eq_with_date
-    query_string = "filter=published eq 2010-10-10 00:00:00"
+    query_string = "filter=published eq 2010-10-10 00:46:37"
     query_params = QueryParams.new(query_string)
 
-    assert_equal(Time, query_params.filters.first[:value].class)
+    assert_equal(DateTime, query_params.filters.first[:value].class)
+
+    expected = DateTime.new(2010, 10, 10, 0, 46, 37)
+
+    assert_equal(expected, query_params.filters.first[:value])
+
   end
 
   def test_multiple_filters

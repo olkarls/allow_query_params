@@ -3,7 +3,7 @@ require "awesome_print"
 class QueryParams
   attr_accessor :order_by, :page, :page_size, :maximum_page_size, :modified_since, :filters
 
-  def initialize(query_string, options = { :page_size => 50, :maximum_page_size => 100 })
+  def initialize(query_string, options = { :page_size => AllowsQueryParam.page_size, :maximum_page_size => AllowsQueryParam.maximum_page_size })
     self.page = 1
     self.order_by = []
     self.filters = []
@@ -15,7 +15,6 @@ class QueryParams
     set_order_by(params)
     set_page(params)
     set_page_size(params)
-    set_modified_since(params)
     set_filters(params)
   end
 
@@ -59,17 +58,6 @@ class QueryParams
     end
   end
 
-  def set_modified_since(params)
-    if params.has_key?('modifiedSince')
-      begin
-        date = DateTime.parse(params['modifiedSince'].first)
-        self.modified_since = date
-      rescue
-        self.modified_since = nil
-      end
-    end
-  end
-
   def set_filters(params)
     if params.has_key?('filter')
       filters = params['filter'][0].split(',')
@@ -93,7 +81,7 @@ class QueryParams
   end
 
   def string_to_type(str)
-    type = (Integer(str) rescue Float(str) rescue Time.parse(str) rescue nil)
+    type = (Integer(str) rescue Float(str) rescue DateTime.parse(str) rescue nil)
 
     if str.downcase == 'true' || str.downcase == 'false'
       return str == 'true'
