@@ -78,6 +78,12 @@ class AllowsQueryParamsTest < MiniTest::Test
     assert_equal(401, result.total_count)
   end
 
+  def test_filter_like
+    result = Product.query_by_params('filter=name like benchmark')
+
+    assert_equal(8, result.total_count)
+  end
+
   def test_filter_date
     result = Product.query_by_params("filter=updated_at gt 2015-11-11 00:46:53&sortBy=updated_at")
 

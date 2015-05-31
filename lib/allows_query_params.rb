@@ -31,7 +31,11 @@ module AllowsQueryParam
 
       query_params.filters.each do |filter|
         if self.column_names.include?(filter[:property].to_s)
-          query = query.where("#{filter[:property]} #{convert_operator(filter[:operator])} ?", filter[:value])
+          if filter[:operator] == :like
+            query = query.where("#{filter[:property]} LIKE ?", "#{filter[:value]}%")
+          else
+            query = query.where("#{filter[:property]} #{convert_operator(filter[:operator])} ?", filter[:value])
+          end
         end
       end
 
@@ -67,6 +71,8 @@ module AllowsQueryParam
       '<'
     when :le
       '<='
+    when :like
+      'LIKE'
     end
   end
 end

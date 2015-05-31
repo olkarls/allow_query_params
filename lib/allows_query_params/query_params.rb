@@ -77,7 +77,7 @@ class QueryParams
   end
 
   def supported_operators
-    [:eq, :ne, :gt, :ge, :lt, :le, :not]
+    [:eq, :ne, :gt, :ge, :lt, :le, :like]
   end
 
   def string_to_type(str)
