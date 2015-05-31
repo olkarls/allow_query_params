@@ -63,7 +63,7 @@ class QueryParams
       filters = params['filter'][0].split(',')
 
       filters.each do |filter|
-        parts = filter.split(' ')
+        parts = filter.split(' ', 3)
 
         if supported_operators.include?(parts[1].strip.to_sym)
           self.filters << {

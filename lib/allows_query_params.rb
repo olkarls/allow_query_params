@@ -31,7 +31,7 @@ module AllowsQueryParam
 
       query_params.filters.each do |filter|
         if self.column_names.include?(filter[:property].to_s)
-          query = query.where("#{filter[:property]} #{convert_operator(filter[:operator])} '#{filter[:value]}'")
+          query = query.where("#{filter[:property]} #{convert_operator(filter[:operator])} ?", filter[:value])
         end
       end
 

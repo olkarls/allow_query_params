@@ -79,7 +79,7 @@ class AllowsQueryParamsTest < MiniTest::Test
   end
 
   def test_filter_date
-    result = Product.query_by_params('filter=updated_at gt 2015-11-11 00:46:53')
+    result = Product.query_by_params("filter=updated_at gt 2015-11-11 00:46:53&sortBy=updated_at")
 
     assert_equal(13, result.total_count)
   end
